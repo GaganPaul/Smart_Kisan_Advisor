@@ -1,6 +1,11 @@
 # Minimal requirements for Smart Kisan Advisor
 # This version is optimized for Python 3.13 compatibility
-
+libgl1-mesa-glx
+libglib2.0-0
+libsm6
+libxext6
+libxrender-dev
+libgomp1
 # Core Framework
 streamlit>=1.32.0
 streamlit-chat>=0.1.0
