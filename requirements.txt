@@ -2,9 +2,10 @@
 streamlit==1.32.0
 streamlit-chat==0.1.1
 
-# Build tools (ensure setuptools & wheel are available)
+# Build tools (ensure wheel building works)
 setuptools>=65.5.0
 wheel>=0.40.0
+setuptools_scm>=7.0.0
 
 # AI/ML Libraries (use CPU-only TensorFlow wheel)
 tensorflow-cpu==2.20.0
