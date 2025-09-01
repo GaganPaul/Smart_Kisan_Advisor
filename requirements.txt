@@ -1,11 +1,13 @@
-# Agricultural Advisory System - Proof of Concept
 # Core Framework
 streamlit==1.32.0
 streamlit-chat==0.1.1
 
+# Build tools (ensure setuptools & wheel are available)
+setuptools>=65.5.0
+wheel>=0.40.0
 
-# AI/ML Libraries
-tensorflow==2.20.0
+# AI/ML Libraries (use CPU-only TensorFlow wheel)
+tensorflow-cpu==2.20.0
 opencv-python==4.9.0.80
 pillow==10.2.0
 numpy==1.26.4
@@ -28,6 +30,6 @@ python-dotenv==1.0.1
 pandas==2.2.2
 python-dateutil==2.9.0
 
-# Hugging Face Transformers for pre-trained models
+# Hugging Face Transformers
 transformers==4.38.2
 torch==2.2.1
