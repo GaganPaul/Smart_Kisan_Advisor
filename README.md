@@ -66,9 +66,19 @@ cd infogri
 ```
 
 ### Step 2: Install Dependencies
+
+#### For Local Development:
 ```bash
 pip install -r requirements.txt
 ```
+
+#### For Streamlit Cloud Deployment:
+If you encounter Python 3.13 compatibility issues, use the minimal requirements:
+```bash
+pip install -r requirements-minimal.txt
+```
+
+**Note**: The minimal requirements file excludes some AI/ML libraries that may not be compatible with Python 3.13 on Streamlit Cloud. The core functionality (chat advisor, weather info, market prices) will still work.
 
 ### Step 3: Configuration Setup
 
@@ -177,6 +187,43 @@ infogri/
 - **Government Partnerships**: Revenue through government contracts
 - **Corporate Partnerships**: Premium features for agri-businesses
 - **Data Analytics**: Anonymized insights for research institutions
+
+## Troubleshooting
+
+### Streamlit Cloud Deployment Issues
+
+#### Python 3.13 Compatibility
+If you encounter errors like "No solution found when resolving dependencies" on Streamlit Cloud:
+
+1. **Use Minimal Requirements**: Replace `requirements.txt` with `requirements-minimal.txt`
+2. **Alternative**: Use Python 3.11 or 3.12 by specifying in your deployment settings
+3. **Manual Fix**: Comment out problematic packages in requirements.txt
+
+#### Common Error Solutions
+
+**PyTorch/Transformers Issues**:
+- Use `requirements-minimal.txt` for basic functionality
+- The disease detection feature may be disabled, but chat advisor will work
+
+**OpenCV Issues**:
+- The app will show a warning but continue to function
+- Image upload will still work for basic display
+
+**API Key Issues**:
+- Ensure your `GROQ_API_KEY` is set in Streamlit Secrets
+- Check that the API key is valid and has sufficient credits
+
+### Local Development Issues
+
+#### Import Errors
+If you get import errors for optional libraries:
+- Install missing packages: `pip install package-name`
+- Or use the minimal requirements for basic functionality
+
+#### Memory Issues
+For large model downloads:
+- Use a machine with at least 4GB RAM
+- Consider using cloud deployment for better resources
 
 ## Contributing
 This project is developed for SIH 2025 Hackathon. Contributions are welcome!

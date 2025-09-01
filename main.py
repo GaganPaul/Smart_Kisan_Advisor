@@ -1,8 +1,6 @@
 import streamlit as st
-import tensorflow as tf
 from PIL import Image
 import numpy as np
-import cv2
 import json
 import os
 from datetime import datetime
@@ -13,8 +11,29 @@ from langchain.schema import HumanMessage, AIMessage
 from langchain.prompts import PromptTemplate
 from langchain_groq import ChatGroq
 import pandas as pd
-from transformers import pipeline
 import matplotlib.pyplot as plt
+
+# Optional imports with error handling
+try:
+    import cv2
+    CV2_AVAILABLE = True
+except ImportError:
+    CV2_AVAILABLE = False
+    st.warning("OpenCV not available. Some image processing features may be limited.")
+
+try:
+    from transformers import pipeline
+    TRANSFORMERS_AVAILABLE = True
+except ImportError:
+    TRANSFORMERS_AVAILABLE = False
+    st.warning("Transformers not available. Disease detection will be disabled.")
+
+try:
+    import tensorflow as tf
+    TENSORFLOW_AVAILABLE = True
+except ImportError:
+    TENSORFLOW_AVAILABLE = False
+    # TensorFlow is optional for this application
 
 # Load configuration from Streamlit Secrets
 def load_config():
@@ -221,6 +240,10 @@ def initialize_groq():
 # Load pre-trained disease detection model
 @st.cache_resource
 def load_disease_model():
+    if not TRANSFORMERS_AVAILABLE:
+        st.error("Transformers library not available. Disease detection is disabled.")
+        return None
+    
     try:
         # Using a specialized crop disease detection model
         classifier = pipeline(
@@ -432,6 +455,11 @@ def main():
     # Tab 1: Disease Detection
     with tab1:
         st.markdown(f"<div class='feature-card'><h3>{t['disease_detection']}</h3></div>", unsafe_allow_html=True)
+        
+        if not TRANSFORMERS_AVAILABLE:
+            st.error("⚠️ Disease detection is currently unavailable. The required AI model libraries are not installed.")
+            st.info("This feature requires the Transformers library and PyTorch. Please check your deployment configuration.")
+            return
         
         col1, col2 = st.columns([1, 1])
         
