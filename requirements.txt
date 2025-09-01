@@ -3,8 +3,9 @@
 streamlit==1.32.0
 streamlit-chat==0.1.1
 
+
 # AI/ML Libraries
-tensorflow==2.17.1
+tensorflow==2.20.0
 opencv-python==4.9.0.80
 pillow==10.2.0
 numpy==1.26.4
