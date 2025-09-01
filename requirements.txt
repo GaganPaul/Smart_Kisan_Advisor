@@ -1,20 +1,14 @@
-# System Libraries (for Debian/Ubuntu)
-libgl1-mesa-glx
-libglib2.0-0
-libsm6
-libxext6
-libxrender-dev
-libgomp1
-
+# Agricultural Advisory System - Proof of Concept
 # Core Framework
 streamlit==1.32.0
 streamlit-chat==0.1.1
 
-# Essential Libraries
-numpy==2.0.0
+# AI/ML Libraries
+tensorflow==2.17.1
+opencv-python==4.9.0.80
 pillow==10.2.0
-pandas==2.2.2
-requests==2.32.3
+numpy==1.26.4
+scikit-learn==1.4.2
 
 # LangChain & LLM Integration
 langchain==0.1.20
@@ -24,14 +18,15 @@ groq==0.10.0
 
 # Image Processing
 matplotlib==3.8.0
-opencv-python==4.9.0.80
 
-# AI/ML Libraries
-tensorflow-cpu==2.20.0
-scikit-learn==1.4.2
-transformers==4.38.2
-torch==2.2.1
+# API Integration
+requests==2.32.3
+python-dotenv==1.0.1
 
 # Utilities
-python-dotenv==1.0.1
+pandas==2.2.2
 python-dateutil==2.9.0
+
+# Hugging Face Transformers for pre-trained models
+transformers==4.38.2
+torch==2.2.1
