@@ -7,7 +7,6 @@ import json
 import os
 from datetime import datetime
 import requests
-from dotenv import load_dotenv
 from groq import Groq
 from langchain.memory import ConversationBufferWindowMemory
 from langchain.schema import HumanMessage, AIMessage
@@ -17,8 +16,37 @@ import pandas as pd
 from transformers import pipeline
 import matplotlib.pyplot as plt
 
-# Load environment variables
-load_dotenv()
+# Load configuration from Streamlit Secrets
+def load_config():
+    """Load configuration from Streamlit Secrets"""
+    try:
+        # Access secrets directly from st.secrets
+        config = {
+            "api": {
+                "groq_api_key": st.secrets.get("GROQ_API_KEY", ""),
+                "weather_api_key": st.secrets.get("WEATHER_API_KEY", ""),
+                "market_api_key": st.secrets.get("MARKET_API_KEY", "")
+            },
+            "app": {
+                "default_language": st.secrets.get("DEFAULT_LANGUAGE", "English"),
+                "model_name": st.secrets.get("MODEL_NAME", "gemma2-9b-it"),
+                "max_tokens": st.secrets.get("MAX_TOKENS", 1000),
+                "temperature": st.secrets.get("TEMPERATURE", 0.7)
+            },
+            "features": {
+                "enable_disease_detection": st.secrets.get("ENABLE_DISEASE_DETECTION", True),
+                "enable_chat_advisor": st.secrets.get("ENABLE_CHAT_ADVISOR", True),
+                "enable_weather_info": st.secrets.get("ENABLE_WEATHER_INFO", True),
+                "enable_market_prices": st.secrets.get("ENABLE_MARKET_PRICES", True)
+            }
+        }
+        return config
+    except Exception as e:
+        st.error(f"Error loading configuration from secrets: {e}")
+        return None
+
+# Load configuration
+config = load_config()
 
 # Page configuration
 st.set_page_config(
@@ -171,13 +199,20 @@ TRANSLATIONS = {
 @st.cache_resource
 def initialize_groq():
     try:
-        api_key = os.getenv("GROQ_API_KEY")
-        if not api_key:
-            st.error("GROQ_API_KEY not found in environment variables")
+        if config is None:
+            st.error("Configuration not loaded. Please check Streamlit Secrets.")
             return None
+            
+        api_key = config.get("api", {}).get("groq_api_key")
+        if not api_key:
+            st.error("GROQ_API_KEY not found in Streamlit Secrets. Please add it to your secrets configuration.")
+            return None
+            
+        model_name = config.get("app", {}).get("model_name", "gemma2-9b-it")
+        
         return ChatGroq(
             groq_api_key=api_key,
-            model_name="gemma2-9b-it"
+            model_name=model_name
         )
     except Exception as e:
         st.error(f"Error initializing Groq: {e}")

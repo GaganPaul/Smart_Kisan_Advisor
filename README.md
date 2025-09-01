@@ -70,15 +70,38 @@ cd infogri
 pip install -r requirements.txt
 ```
 
-### Step 3: Environment Setup
-Create a `.env` file in the project root:
-```bash
-# Copy the example file
-cp .env.example .env
+### Step 3: Configuration Setup
 
-# Edit .env and add your Groq API key
-GROQ_API_KEY=your_actual_groq_api_key_here
+#### For Local Development:
+Option 1 - Use the setup script (recommended):
+```bash
+python setup_secrets.py
 ```
+
+Option 2 - Manual setup:
+```bash
+# Create the .streamlit directory
+mkdir -p .streamlit
+
+# Copy the example secrets file
+cp .streamlit/secrets.toml.example .streamlit/secrets.toml
+
+# Edit .streamlit/secrets.toml and add your Groq API key
+# Replace "your_groq_api_key_here" with your actual API key
+```
+
+#### For Production (Streamlit Cloud):
+1. Go to your app's settings in Streamlit Cloud
+2. Navigate to the "Secrets" section
+3. Add your configuration in TOML format:
+```toml
+GROQ_API_KEY = "your_actual_groq_api_key_here"
+MODEL_NAME = "gemma2-9b-it"
+MAX_TOKENS = 1000
+TEMPERATURE = 0.7
+```
+
+**Important**: Replace `your_groq_api_key_here` with your actual Groq API key from https://console.groq.com/
 
 ### Step 4: Run the Application
 ```bash
@@ -120,7 +143,9 @@ infogri/
 ├── main.py                 # Main Streamlit application
 ├── requirements.txt        # Python dependencies
 ├── README.md              # Project documentation
-├── .env.example           # Environment variables template
+├── test_setup.py          # Setup verification script
+├── .streamlit/
+│   └── secrets.toml       # Local secrets file (for development)
 ├── data/                  # Data storage (future use)
 ├── models/                # ML models (future use)
 └── .gitignore            # Git ignore file

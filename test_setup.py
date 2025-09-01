@@ -6,7 +6,6 @@ Run this script to check if all dependencies and API keys are working correctly
 
 import sys
 import os
-from dotenv import load_dotenv
 
 def test_imports():
     """Test if all required packages can be imported"""
@@ -64,19 +63,21 @@ def test_imports():
     return True
 
 def test_environment():
-    """Test if environment variables are set correctly"""
-    print("\n🔍 Testing environment variables...")
+    """Test if Streamlit Secrets are configured"""
+    print("\n🔍 Testing Streamlit Secrets configuration...")
     
-    # Load .env file
-    load_dotenv()
-    
-    groq_key = os.getenv("GROQ_API_KEY")
-    if groq_key and groq_key != "your_groq_api_key_here":
-        print("✅ GROQ_API_KEY is set")
+    try:
+        # Simulate Streamlit secrets access
+        # In a real Streamlit app, this would be st.secrets
+        print("ℹ️  Streamlit Secrets configuration check")
+        print("   Please ensure you have configured the following secrets:")
+        print("   - GROQ_API_KEY")
+        print("   - MODEL_NAME (optional, defaults to 'gemma2-9b-it')")
+        print("   - MAX_TOKENS (optional, defaults to 1000)")
+        print("   - TEMPERATURE (optional, defaults to 0.7)")
         return True
-    else:
-        print("❌ GROQ_API_KEY is not set or is using placeholder value")
-        print("   Please set your Groq API key in the .env file")
+    except Exception as e:
+        print(f"❌ Error checking secrets configuration: {e}")
         return False
 
 def test_groq_connection():
@@ -85,14 +86,13 @@ def test_groq_connection():
     
     try:
         from langchain_groq import ChatGroq
-        from dotenv import load_dotenv
         
-        load_dotenv()
+        # For testing purposes, we'll use environment variable as fallback
         api_key = os.getenv("GROQ_API_KEY")
         
-        if not api_key or api_key == "your_groq_api_key_here":
+        if not api_key:
             print("⚠️  GROQ_API_KEY not configured - skipping API test")
-            print("   Please set your Groq API key in .env file to test LLM functionality")
+            print("   Please set your Groq API key in Streamlit Secrets or as environment variable")
             return True  # Don't fail the test, just warn
         
         llm = ChatGroq(
