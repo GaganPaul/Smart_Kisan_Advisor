@@ -1,19 +1,13 @@
 import streamlit as st
 from PIL import Image
 import numpy as np
-import json
-import os
-from datetime import datetime
-import requests
-from groq import Groq
+
 from langchain.memory import ConversationBufferWindowMemory
-from langchain.schema import HumanMessage, AIMessage
+from langchain.chains import ConversationChain
+#from langchain.schema import HumanMessage, AIMessage
 from langchain.prompts import PromptTemplate
 from langchain_groq import ChatGroq
-import pandas as pd
-import matplotlib.pyplot as plt
 
-# Optional imports with error handling
 try:
     import cv2
     CV2_AVAILABLE = True
@@ -443,6 +437,12 @@ def main():
     # Initialize models
     llm = initialize_groq()
     disease_classifier = load_disease_model()
+
+    # Initialize conversational memory and chain
+    if 'memory' not in st.session_state:
+        st.session_state.memory = ConversationBufferWindowMemory(k=5, return_messages=True)
+    if 'chat_chain' not in st.session_state and llm is not None:
+        st.session_state.chat_chain = ConversationChain(llm=llm, memory=st.session_state.memory, verbose=False)
     
     # Main content tabs
     tab1, tab2, tab3, tab4 = st.tabs([
@@ -545,19 +545,25 @@ def main():
         with col1:
             if st.button(t['send']):
                 if user_input:
-                    # Add user message to history
+                    # Add user message
                     st.session_state.chat_history.append({"role": "user", "content": user_input})
-                    
-                    # Get AI response
+
+                    # Use conversational chain with memory
                     with st.spinner("Thinking..."):
-                        ai_response = chat_with_advisor(user_input, llm)
+                        if 'chat_chain' in st.session_state:
+                            ai_response = st.session_state.chat_chain.predict(input=user_input)
+                        else:
+                            ai_response = chat_with_advisor(user_input, llm)
                         st.session_state.chat_history.append({"role": "assistant", "content": ai_response})
-                    
+
                     st.rerun()
         
         with col2:
             if st.button("Clear Chat"):
                 st.session_state.chat_history = []
+                if 'memory' in st.session_state:
+                    # Reset memory buffer
+                    st.session_state.memory.clear()
                 st.rerun()
     
     # Tab 3: Weather Information
