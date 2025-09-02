@@ -242,7 +242,7 @@ def load_disease_model():
         # Using a specialized crop disease detection model
         classifier = pipeline(
             "image-classification", 
-            model="wambugu71/crop_leaf_diseases_vit",
+            model="vishnun0027/Crop_Disease_model_1",
             top_k=5
         )
         return classifier
