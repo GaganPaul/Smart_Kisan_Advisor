@@ -5,7 +5,7 @@ streamlit-chat
 
 # AI/ML Libraries
 tensorflow
-opencv-python
+
 pillow
 numpy
 scikit-learn
@@ -22,7 +22,7 @@ matplotlib
 # API Integration
 requests
 python-dotenv
-
+opencv-python
 # Utilities
 pandas
 python-dateutil
