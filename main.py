@@ -2,10 +2,11 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 
-from langchain_community.memory import ConversationBufferWindowMemory
+from langchain_community.memory.buffer import ConversationBufferWindowMemory
 from langchain.chains import ConversationChain
 from langchain.prompts import PromptTemplate
 from langchain_groq import ChatGroq
+
 
 try:
     import cv2
