@@ -2,9 +2,8 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 
-from langchain.memory import ConversationBufferWindowMemory
+from langchain_community.memory import ConversationBufferWindowMemory
 from langchain.chains import ConversationChain
-#from langchain.schema import HumanMessage, AIMessage
 from langchain.prompts import PromptTemplate
 from langchain_groq import ChatGroq
 
