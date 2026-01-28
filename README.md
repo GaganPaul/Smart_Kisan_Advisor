@@ -1,5 +1,8 @@
 # 🌾 Smart Kisan Advisor - Agricultural Advisory System
 
+## Try Out the Project Here
+- https://smart-kisan-advisor.streamlit.app/ 
+
 ## Problem Statement
 A majority of small and marginal farmers in India rely on traditional knowledge, local shopkeepers, or guesswork for crop selection, pest control, and fertilizer use. They lack access to personalized, real-time advisory services that account for soil type, weather conditions, and crop history.
 
