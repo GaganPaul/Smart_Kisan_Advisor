@@ -275,7 +275,7 @@ def initialize_groq():
             st.error("GROQ_API_KEY not found in Streamlit Secrets. Please add it to your secrets configuration.")
             return None
             
-        model_name = config.get("app", {}).get("model_name", "gemma2-9b-it")
+        model_name = config.get("app", {}).get("model_name", "meta-llama/llama-4-maverick-17b-128e-instruct")
         
         return ChatGroq(
             groq_api_key=api_key,
