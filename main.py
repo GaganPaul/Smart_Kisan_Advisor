@@ -2,10 +2,41 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 
-from langchain.memory.buffer import ConversationBufferWindowMemory
-from langchain.chains import ConversationChain
-from langchain.prompts import PromptTemplate
-from langchain_groq import ChatGroq
+# LangChain imports with fallbacks for different package layouts/versions
+try:
+    # preferred / modern import
+    from langchain.memory import ConversationBufferWindowMemory
+    MEMORY_AVAILABLE = True
+except Exception:
+    try:
+        # fallback to the classic package layout installed in this environment
+        from langchain_classic.memory.buffer_window import ConversationBufferWindowMemory
+        MEMORY_AVAILABLE = True
+    except Exception:
+        ConversationBufferWindowMemory = None
+        MEMORY_AVAILABLE = False
+
+try:
+    from langchain.chains import ConversationChain
+    CHAIN_AVAILABLE = True
+except Exception:
+    try:
+        from langchain_classic.chains.conversation.base import ConversationChain
+        CHAIN_AVAILABLE = True
+    except Exception:
+        ConversationChain = None
+        CHAIN_AVAILABLE = False
+
+try:
+    from langchain.prompts import PromptTemplate
+    PROMPT_AVAILABLE = True
+except Exception:
+    try:
+        from langchain_core.prompts import PromptTemplate
+        PROMPT_AVAILABLE = True
+    except Exception:
+        PromptTemplate = None
+        PROMPT_AVAILABLE = False
 
 
 
@@ -29,6 +60,24 @@ try:
 except ImportError:
     TENSORFLOW_AVAILABLE = False
     # TensorFlow is optional for this application
+
+try:
+    import importlib
+    spec = importlib.util.find_spec("langchain_groq")
+    if spec is not None:
+        langchain_groq = importlib.import_module("langchain_groq")
+        ChatGroq = getattr(langchain_groq, "ChatGroq", None)
+        if ChatGroq is not None:
+            LANGCHAIN_GROQ_AVAILABLE = True
+        else:
+            LANGCHAIN_GROQ_AVAILABLE = False
+            st.warning("ChatGroq class not found in langchain_groq. Chat advisor will be disabled.")
+    else:
+        LANGCHAIN_GROQ_AVAILABLE = False
+        st.warning("langchain_groq not available. Chat advisor will be disabled.")
+except Exception as e:
+    LANGCHAIN_GROQ_AVAILABLE = False
+    st.warning(f"Error importing langchain_groq: {e}")
 
 # Load configuration from Streamlit Secrets
 def load_config():
@@ -64,7 +113,7 @@ config = load_config()
 
 # Page configuration
 st.set_page_config(
-    page_title="🌾 Smart Kisan Advisor",
+    page_title="Smart Kisan Advisor",
     page_icon="🌾",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -215,6 +264,10 @@ def initialize_groq():
     try:
         if config is None:
             st.error("Configuration not loaded. Please check Streamlit Secrets.")
+            return None
+
+        if not LANGCHAIN_GROQ_AVAILABLE:
+            st.error("langchain_groq package is not installed. Install it to enable ChatGroq.")
             return None
             
         api_key = config.get("api", {}).get("groq_api_key")
